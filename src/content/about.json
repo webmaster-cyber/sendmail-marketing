@@ -1,0 +1,20 @@
+{
+  "title": "About SendMail",
+  "subtitle": "We help businesses connect with their audience through effective email marketing.",
+  "story": "SendMail was founded with a simple mission: make email marketing accessible and effective for businesses of all sizes, especially those in Zimbabwe and across Africa. We understand the unique challenges businesses face in our region, from unreliable internet connectivity to limited access to international payment methods.",
+  "mission": "Our mission is to provide powerful, easy-to-use email marketing tools that help businesses grow their audience, engage their customers, and drive results. We believe every business deserves access to professional-grade marketing tools.",
+  "values": [
+    {
+      "title": "Simplicity",
+      "description": "We believe powerful tools should be easy to use. No technical expertise required."
+    },
+    {
+      "title": "Reliability",
+      "description": "Your emails should always get delivered. We maintain high deliverability standards."
+    },
+    {
+      "title": "Support",
+      "description": "We are here to help you succeed. Local support that understands your needs."
+    }
+  ]
+}

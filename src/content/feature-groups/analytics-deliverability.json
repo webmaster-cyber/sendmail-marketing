@@ -1,0 +1,21 @@
+{
+  "title": "Analytics & Deliverability",
+  "order": 4,
+  "features": [
+    {
+      "title": "Real-Time Tracking",
+      "description": "Monitor opens, clicks, bounces, and unsubscribes as they happen with live dashboards.",
+      "icon": "chart"
+    },
+    {
+      "title": "Campaign Reports",
+      "description": "Get detailed reports on every campaign with actionable insights to improve performance.",
+      "icon": "chart"
+    },
+    {
+      "title": "SPF, DKIM & DMARC",
+      "description": "Full email authentication support to ensure your emails land in the inbox.",
+      "icon": "shield"
+    }
+  ]
+}

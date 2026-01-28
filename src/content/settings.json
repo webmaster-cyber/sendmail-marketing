@@ -1,0 +1,16 @@
+{
+  "siteName": "SendMail",
+  "siteDescription": "Email marketing made simple for businesses in Zimbabwe",
+  "appUrl": "https://app.sendmail.co.zw",
+  "apiUrl": "https://app.sendmail.co.zw",
+  "signupId": "",
+  "contactEmail": "hello@sendmail.co.zw",
+  "socialTwitter": "",
+  "socialLinkedin": "",
+  "logo": "/branding/logo.svg",
+  "logoWhite": "/branding/logo-white.png",
+  "favicon": "/branding/favicon.png",
+  "colorPrimary": "#006FC2",
+  "colorPrimaryHover": "#005a9e",
+  "colorDark": "#1a2332"
+}

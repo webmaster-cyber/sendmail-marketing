@@ -1,0 +1,219 @@
+---
+import Layout from '../layouts/Layout.astro'
+import fs from 'node:fs'
+import path from 'node:path'
+
+const settings = {
+  appUrl: import.meta.env.PUBLIC_APP_URL || 'https://app.sendmail.co.zw',
+  apiUrl: import.meta.env.PUBLIC_API_URL || 'https://app.sendmail.co.zw',
+  signupId: import.meta.env.PUBLIC_SIGNUP_ID || '',
+}
+
+// Load FAQs from CMS
+const faqsDir = path.join(process.cwd(), 'src/content/faqs')
+const faqFiles = fs.readdirSync(faqsDir).filter(f => f.endsWith('.json'))
+const faqs = faqFiles
+  .map(f => JSON.parse(fs.readFileSync(path.join(faqsDir, f), 'utf-8')))
+  .sort((a, b) => (a.order || 0) - (b.order || 0))
+
+interface PlanFeature {
+  name: string
+  included: boolean
+}
+
+interface Plan {
+  id: string
+  name: string
+  slug: string
+  description: string
+  price_usd: number
+  price_zwl: number
+  billing_period: 'monthly' | 'yearly'
+  subscriber_limit: number | null
+  send_limit_monthly: number | null
+  features: PlanFeature[]
+  trial_days: number
+  is_free: boolean
+  sort_order: number
+}
+
+let plans: Plan[] = []
+
+try {
+  const res = await fetch(`${settings.apiUrl}/api/public/plans`)
+  if (res.ok) {
+    plans = await res.json()
+  }
+} catch (e) {
+  console.error('Failed to fetch plans:', e)
+}
+
+// Fallback plans if API unavailable
+if (plans.length === 0) {
+  plans = [
+    {
+      id: 'free',
+      name: 'Starter',
+      slug: 'starter',
+      description: 'Perfect for getting started',
+      price_usd: 0,
+      price_zwl: 0,
+      billing_period: 'monthly',
+      subscriber_limit: 500,
+      send_limit_monthly: 1000,
+      features: [
+        { name: 'Email broadcasts', included: true },
+        { name: 'Basic templates', included: true },
+        { name: 'Analytics', included: true },
+        { name: 'Automation', included: false },
+        { name: 'API access', included: false },
+      ],
+      trial_days: 0,
+      is_free: true,
+      sort_order: 0,
+    },
+    {
+      id: 'pro',
+      name: 'Professional',
+      slug: 'pro',
+      description: 'For growing businesses',
+      price_usd: 29,
+      price_zwl: 900,
+      billing_period: 'monthly',
+      subscriber_limit: 5000,
+      send_limit_monthly: 25000,
+      features: [
+        { name: 'Email broadcasts', included: true },
+        { name: 'Premium templates', included: true },
+        { name: 'Advanced analytics', included: true },
+        { name: 'Automation', included: true },
+        { name: 'API access', included: true },
+      ],
+      trial_days: 14,
+      is_free: false,
+      sort_order: 1,
+    },
+  ]
+}
+
+function formatLimit(limit: number | null): string {
+  if (limit === null) return 'Unlimited'
+  return limit.toLocaleString()
+}
+---
+
+<Layout title="Pricing">
+  <section class="py-20">
+    <div class="container">
+      <div class="text-center mb-16">
+        <h1 class="text-4xl md:text-5xl font-bold text-dark mb-4">Simple, transparent pricing</h1>
+        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+          Choose the plan that fits your needs. All plans include core features.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        {plans.map((plan, index) => (
+          <div class={`bg-white rounded-2xl border-2 p-8 relative ${index === 1 ? 'border-primary shadow-xl' : 'border-gray-100'}`}>
+            {index === 1 && (
+              <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-white text-sm font-semibold px-4 py-1 rounded-full">
+                Most Popular
+              </div>
+            )}
+
+            <h3 class="text-2xl font-bold text-dark mb-2">{plan.name}</h3>
+            <p class="text-gray-600 mb-6 min-h-[3rem]">{plan.description}</p>
+
+            <div class="mb-6">
+              {plan.is_free ? (
+                <div class="text-4xl font-extrabold text-dark">Free</div>
+              ) : (
+                <>
+                  <div class="text-4xl font-extrabold text-dark">
+                    ${plan.price_usd}
+                    <span class="text-lg font-normal text-gray-500">/{plan.billing_period === 'yearly' ? 'yr' : 'mo'}</span>
+                  </div>
+                  <div class="text-sm text-gray-500">or ZWL {plan.price_zwl.toLocaleString()}/{plan.billing_period === 'yearly' ? 'yr' : 'mo'}</div>
+                </>
+              )}
+            </div>
+
+            {plan.trial_days > 0 && !plan.is_free && (
+              <div class="mb-6">
+                <span class="inline-block bg-blue-50 text-blue-600 text-sm font-medium px-3 py-1 rounded-full">
+                  {plan.trial_days}-day free trial
+                </span>
+              </div>
+            )}
+
+            <div class="mb-6 pb-6 border-b border-gray-100">
+              <div class="flex justify-between text-sm mb-2">
+                <span class="text-gray-600">Subscribers</span>
+                <span class="font-semibold">{formatLimit(plan.subscriber_limit)}</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-600">Emails/month</span>
+                <span class="font-semibold">{formatLimit(plan.send_limit_monthly)}</span>
+              </div>
+            </div>
+
+            <ul class="space-y-3 mb-8">
+              {plan.features.map((feature) => (
+                <li class="flex items-center gap-2">
+                  {feature.included ? (
+                    <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                  ) : (
+                    <svg class="w-5 h-5 text-gray-300 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                  )}
+                  <span class={feature.included ? 'text-gray-700' : 'text-gray-400'}>{feature.name}</span>
+                </li>
+              ))}
+            </ul>
+
+            <a
+              href={`${settings.appUrl}/signup/${settings.signupId}?plan=${plan.slug}`}
+              class={`block w-full text-center py-3 px-6 rounded-lg font-semibold transition-colors ${
+                index === 1
+                  ? 'bg-primary text-white hover:bg-primary/90'
+                  : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+              }`}
+            >
+              {plan.is_free ? 'Get Started' : 'Start Free Trial'}
+            </a>
+          </div>
+        ))}
+      </div>
+
+      <div class="mt-16 text-center">
+        <p class="text-gray-600 mb-4">Need a custom plan for your enterprise?</p>
+        <a href="/contact" class="text-primary font-semibold hover:underline">Contact us for custom pricing</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  {faqs.length > 0 && (
+    <section class="py-20 bg-gray-50">
+      <div class="container">
+        <h2 class="text-3xl font-bold text-dark text-center mb-12">Frequently asked questions</h2>
+        <div class="max-w-3xl mx-auto space-y-6">
+          {faqs.map((faq) => (
+            <details class="bg-white rounded-lg p-6 group">
+              <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">
+                {faq.question}
+                <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </summary>
+              <p class="mt-4 text-gray-600">{faq.answer}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+</Layout>

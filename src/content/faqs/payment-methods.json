@@ -1,0 +1,5 @@
+{
+  "question": "What payment methods do you accept?",
+  "answer": "We accept EcoCash, OneMoney, and other mobile money services via Paynow, as well as international cards via Stripe.",
+  "order": 2
+}

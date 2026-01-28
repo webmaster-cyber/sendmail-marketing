@@ -1,0 +1,21 @@
+{
+  "title": "Automation",
+  "order": 2,
+  "features": [
+    {
+      "title": "Email Funnels",
+      "description": "Create automated sequences that nurture leads and convert them into customers on autopilot.",
+      "icon": "zap"
+    },
+    {
+      "title": "Trigger-Based Emails",
+      "description": "Send emails automatically based on subscriber actions, dates, or custom events.",
+      "icon": "clock"
+    },
+    {
+      "title": "Scheduling",
+      "description": "Plan your campaigns ahead and schedule them to send at the perfect time for your audience.",
+      "icon": "clock"
+    }
+  ]
+}

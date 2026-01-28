@@ -1,0 +1,21 @@
+{
+  "title": "Audience Management",
+  "order": 3,
+  "features": [
+    {
+      "title": "Lists & Segments",
+      "description": "Organize subscribers into lists and create dynamic segments based on behavior and attributes.",
+      "icon": "users"
+    },
+    {
+      "title": "Custom Fields",
+      "description": "Store any data about your subscribers and use it for personalization and targeting.",
+      "icon": "code"
+    },
+    {
+      "title": "Import & Export",
+      "description": "Easily import subscribers from CSV files or export your data whenever you need it.",
+      "icon": "globe"
+    }
+  ]
+}

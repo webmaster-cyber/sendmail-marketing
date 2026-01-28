@@ -1,0 +1,144 @@
+---
+import '../styles/global.css'
+import fs from 'node:fs'
+import path from 'node:path'
+
+interface Props {
+  title: string
+  description?: string
+}
+
+const { title, description = 'Email marketing made simple. Send newsletters, automate campaigns, and grow your audience.' } = Astro.props
+
+// Load settings from CMS
+let cmsSettings = {
+  siteName: 'SendMail',
+  siteDescription: 'Email marketing made simple for businesses in Zimbabwe',
+  appUrl: 'https://app.sendmail.co.zw',
+  signupId: '',
+  logo: '/branding/logo.svg',
+  logoWhite: '/branding/logo-white.png',
+  favicon: '/branding/favicon.png',
+  colorPrimary: '#006FC2',
+  colorPrimaryHover: '#005a9e',
+  colorDark: '#1a2332',
+}
+
+try {
+  const filePath = path.join(process.cwd(), 'src/content/settings.json')
+  if (fs.existsSync(filePath)) {
+    cmsSettings = { ...cmsSettings, ...JSON.parse(fs.readFileSync(filePath, 'utf-8')) }
+  }
+} catch (e) {
+  // Use defaults
+}
+
+// Allow env vars to override CMS settings
+const settings = {
+  ...cmsSettings,
+  appUrl: import.meta.env.PUBLIC_APP_URL || cmsSettings.appUrl,
+  signupId: import.meta.env.PUBLIC_SIGNUP_ID || cmsSettings.signupId,
+}
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/png" href={settings.favicon} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <title>{title} | {settings.siteName}</title>
+  </head>
+  <body class="min-h-screen flex flex-col" style={`--color-primary: ${settings.colorPrimary}; --color-primary-hover: ${settings.colorPrimaryHover}; --color-dark: ${settings.colorDark};`}>
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-gray-100">
+      <nav class="container flex items-center justify-between h-16">
+        <a href="/" class="flex items-center gap-2">
+          <img src={settings.logo} alt={settings.siteName} class="h-8" />
+        </a>
+
+        <div class="hidden md:flex items-center gap-8">
+          <a href="/features" class="text-gray-600 hover:text-primary transition-colors">Features</a>
+          <a href="/pricing" class="text-gray-600 hover:text-primary transition-colors">Pricing</a>
+          <a href={`${settings.appUrl}/login`} class="text-gray-600 hover:text-primary transition-colors">Log in</a>
+          <a href={`${settings.appUrl}/signup/${settings.signupId}`} class="btn-primary text-sm py-2">
+            Get Started Free
+          </a>
+        </div>
+
+        <button class="md:hidden p-2" id="mobile-menu-btn">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </nav>
+
+      <div class="hidden md:hidden border-t border-gray-100" id="mobile-menu">
+        <div class="container py-4 space-y-4">
+          <a href="/features" class="block text-gray-600 hover:text-primary">Features</a>
+          <a href="/pricing" class="block text-gray-600 hover:text-primary">Pricing</a>
+          <a href={`${settings.appUrl}/login`} class="block text-gray-600 hover:text-primary">Log in</a>
+          <a href={`${settings.appUrl}/signup/${settings.signupId}`} class="btn-primary w-full text-center">
+            Get Started Free
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1">
+      <slot />
+    </main>
+
+    <footer class="bg-dark text-white">
+      <div class="container py-12">
+        <div class="grid md:grid-cols-4 gap-8">
+          <div>
+            <div class="mb-4">
+              <img src={settings.logoWhite} alt={settings.siteName} class="h-8" />
+            </div>
+            <p class="text-gray-400 text-sm">{settings.siteDescription}</p>
+          </div>
+
+          <div>
+            <h4 class="font-semibold mb-4">Product</h4>
+            <ul class="space-y-2 text-gray-400 text-sm">
+              <li><a href="/features" class="hover:text-white transition-colors">Features</a></li>
+              <li><a href="/pricing" class="hover:text-white transition-colors">Pricing</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="font-semibold mb-4">Company</h4>
+            <ul class="space-y-2 text-gray-400 text-sm">
+              <li><a href="/about" class="hover:text-white transition-colors">About</a></li>
+              <li><a href="/contact" class="hover:text-white transition-colors">Contact</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="font-semibold mb-4">Legal</h4>
+            <ul class="space-y-2 text-gray-400 text-sm">
+              <li><a href="/privacy" class="hover:text-white transition-colors">Privacy Policy</a></li>
+              <li><a href="/terms" class="hover:text-white transition-colors">Terms of Service</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm">
+          &copy; {new Date().getFullYear()} {settings.siteName}. All rights reserved.
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const btn = document.getElementById('mobile-menu-btn')
+      const menu = document.getElementById('mobile-menu')
+      btn?.addEventListener('click', () => {
+        menu?.classList.toggle('hidden')
+      })
+    </script>
+  </body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "title": "Create & Send",
+  "order": 1,
+  "features": [
+    {
+      "title": "Drag & Drop Editor",
+      "description": "Build beautiful emails without any coding. Our intuitive editor makes it easy to create professional campaigns.",
+      "icon": "mail"
+    },
+    {
+      "title": "Email Templates",
+      "description": "Start with professionally designed templates for newsletters, announcements, promotions, and more.",
+      "icon": "mail"
+    },
+    {
+      "title": "A/B Testing",
+      "description": "Test subject lines, content, and send times to optimize your campaigns for better results.",
+      "icon": "chart"
+    }
+  ]
+}
