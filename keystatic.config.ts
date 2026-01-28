@@ -95,6 +95,38 @@ export default config({
         colorPrimary: colorField('Primary Color', 'Main brand color (hex, e.g. #006FC2)', '#006FC2'),
         colorPrimaryHover: colorField('Primary Hover Color', 'Hover state for primary color (hex)', '#005a9e'),
         colorDark: colorField('Dark Text Color', 'Color for headings and dark text (hex)', '#1a2332'),
+        // SEO
+        ogImage: fields.image({
+          label: 'Social Share Image',
+          description: 'Default image for social media sharing (recommended: 1200x630px PNG or JPG)',
+          directory: 'public/branding',
+          publicPath: '/branding/',
+        }),
+        twitterHandle: fields.text({
+          label: 'Twitter Handle',
+          description: 'Twitter/X username without @ (e.g. sendmailzw)',
+        }),
+        googleVerification: fields.text({
+          label: 'Google Site Verification',
+          description: 'Google Search Console verification code (just the code, not the full meta tag)',
+        }),
+      },
+    }),
+    seo: singleton({
+      label: 'Page SEO',
+      path: 'src/content/seo',
+      format: 'json',
+      schema: {
+        homeTitle: fields.text({ label: 'Homepage Title', description: 'SEO title for homepage' }),
+        homeDescription: fields.text({ label: 'Homepage Description', description: 'Meta description for homepage', multiline: true }),
+        featuresTitle: fields.text({ label: 'Features Page Title' }),
+        featuresDescription: fields.text({ label: 'Features Page Description', multiline: true }),
+        pricingTitle: fields.text({ label: 'Pricing Page Title' }),
+        pricingDescription: fields.text({ label: 'Pricing Page Description', multiline: true }),
+        aboutTitle: fields.text({ label: 'About Page Title' }),
+        aboutDescription: fields.text({ label: 'About Page Description', multiline: true }),
+        contactTitle: fields.text({ label: 'Contact Page Title' }),
+        contactDescription: fields.text({ label: 'Contact Page Description', multiline: true }),
       },
     }),
   },

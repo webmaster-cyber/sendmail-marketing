@@ -13,6 +13,12 @@ const homepageContent = JSON.parse(
   fs.readFileSync(path.join(process.cwd(), 'src/content/homepage.json'), 'utf-8')
 )
 
+// Load SEO content
+let seoContent = { homeTitle: 'Email Marketing Made Simple', homeDescription: '' }
+try {
+  seoContent = { ...seoContent, ...JSON.parse(fs.readFileSync(path.join(process.cwd(), 'src/content/seo.json'), 'utf-8')) }
+} catch (e) { /* use defaults */ }
+
 // Load features from CMS
 const featuresDir = path.join(process.cwd(), 'src/content/features')
 const featureFiles = fs.readdirSync(featuresDir).filter(f => f.endsWith('.json'))
@@ -38,7 +44,7 @@ const iconPaths: Record<string, string> = {
 }
 ---
 
-<Layout title="Email Marketing Made Simple">
+<Layout title={seoContent.homeTitle} description={seoContent.homeDescription}>
   <!-- Hero -->
   <section class="bg-gradient-to-b from-gray-50 to-white py-20 lg:py-28">
     <div class="container">

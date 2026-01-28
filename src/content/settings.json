@@ -12,5 +12,8 @@
   "favicon": "/branding/favicon.png",
   "colorPrimary": "#006FC2",
   "colorPrimaryHover": "#005a9e",
-  "colorDark": "#1a2332"
+  "colorDark": "#1a2332",
+  "ogImage": "",
+  "twitterHandle": "",
+  "googleVerification": ""
 }

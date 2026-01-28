@@ -6,9 +6,12 @@ import path from 'node:path'
 interface Props {
   title: string
   description?: string
+  image?: string
 }
 
-const { title, description = 'Email marketing made simple. Send newsletters, automate campaigns, and grow your audience.' } = Astro.props
+const { title, description = 'Email marketing made simple. Send newsletters, automate campaigns, and grow your audience.', image } = Astro.props
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 
 // Load settings from CMS
 let cmsSettings = {
@@ -22,6 +25,9 @@ let cmsSettings = {
   colorPrimary: '#006FC2',
   colorPrimaryHover: '#005a9e',
   colorDark: '#1a2332',
+  ogImage: '',
+  twitterHandle: '',
+  googleVerification: '',
 }
 
 try {
@@ -47,10 +53,31 @@ const settings = {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
     <link rel="icon" type="image/png" href={settings.favicon} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Google Verification -->
+    {settings.googleVerification && <meta name="google-site-verification" content={settings.googleVerification} />}
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={`${title} | ${settings.siteName}`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image || (settings.ogImage ? new URL(settings.ogImage.startsWith('/') ? settings.ogImage : `/branding/${settings.ogImage}`, Astro.site) : new URL('/branding/og-image.png', Astro.site))} />
+    <meta property="og:site_name" content={settings.siteName} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalURL} />
+    <meta name="twitter:title" content={`${title} | ${settings.siteName}`} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image || (settings.ogImage ? new URL(settings.ogImage.startsWith('/') ? settings.ogImage : `/branding/${settings.ogImage}`, Astro.site) : new URL('/branding/og-image.png', Astro.site))} />
+    {settings.twitterHandle && <meta name="twitter:site" content={`@${settings.twitterHandle}`} />}
+
     <title>{title} | {settings.siteName}</title>
   </head>
   <body class="min-h-screen flex flex-col" style={`--color-primary: ${settings.colorPrimary}; --color-primary-hover: ${settings.colorPrimaryHover}; --color-dark: ${settings.colorDark};`}>
