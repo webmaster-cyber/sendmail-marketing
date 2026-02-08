@@ -77,8 +77,8 @@ if (plans.length === 0) {
       name: 'Professional',
       slug: 'pro',
       description: 'For growing businesses',
-      price_usd: 29,
-      price_zwl: 900,
+      price_usd: 15,
+      price_zwl: 0,
       billing_period: 'monthly',
       subscriber_limit: 5000,
       send_limit_monthly: 25000,
@@ -133,7 +133,9 @@ function formatLimit(limit: number | null): string {
                     ${plan.price_usd}
                     <span class="text-lg font-normal text-gray-500">/{plan.billing_period === 'yearly' ? 'yr' : 'mo'}</span>
                   </div>
-                  <div class="text-sm text-gray-500">or ZWL {plan.price_zwl.toLocaleString()}/{plan.billing_period === 'yearly' ? 'yr' : 'mo'}</div>
+                  {plan.price_zwl > 0 && (
+                    <div class="text-sm text-gray-500">or ZWL {plan.price_zwl.toLocaleString()}/{plan.billing_period === 'yearly' ? 'yr' : 'mo'}</div>
+                  )}
                 </>
               )}
             </div>
