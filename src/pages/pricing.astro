@@ -89,7 +89,7 @@ if (plans.length === 0) {
         { name: 'Automation', included: true },
         { name: 'API access', included: true },
       ],
-      trial_days: 14,
+      trial_days: 0,
       is_free: false,
       sort_order: 1,
     },
@@ -184,7 +184,7 @@ function formatLimit(limit: number | null): string {
                   : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
               }`}
             >
-              {plan.is_free ? 'Get Started' : 'Start Free Trial'}
+              {plan.is_free ? 'Get Started Free' : 'Choose Plan'}
             </a>
           </div>
         ))}
